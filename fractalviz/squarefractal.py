@@ -1,67 +1,49 @@
-from graphics import *
-import sys
+''' This program draws a T-square fractal.
+    Call this program like:
+    python squarefractal.py 9
+'''
 
+import sys
+from graphics import *
 
 class SquareFractal:
     def __init__(self, centerX, centerY, totalLength, depth):
-        self.centerX = centerX
+        self.centerX = centerX # center of square
         self.centerY = centerY
-        self.totalLength = totalLength
-        self.depth = depth
+        self.totalLength = totalLength # total length of art space
+        self.depth = depth # max recursion depth
 
     def drawSquare(self, win, ctrX, ctrY, l):
-        p1 = Point(ctrX - l/4, ctrY - l/4)
-        p2 = Point(ctrX + l/4, ctrY + l/4)
+        p1 = Point(ctrX - l/4, ctrY - l/4) # lower left corner
+        p2 = Point(ctrX + l/4, ctrY + l/4) # upper right corner
 
-        rect = Rectangle(p1,p2)
-        rect.setFill(color_rgb(0,0,0))
-        rect.draw(win)
+        rect = Rectangle(p1,p2) # construct the rectangle
+        #rect.setFill(color_rgb(0,0,0)) # try commenting out to see what happens (recursion might be more clear without filling in the squares)
+        rect.draw(win) # draw the rectangle in the window
     
     def drawSection(self, win, ctrX, ctrY, l, depth):
         # Draw the big square
-        print(ctrX, ctrY, l)
         if depth > 0:
             self.drawSquare(win, ctrX, ctrY, l)
-            # Draw the smaller squares
-            
-            self.drawSection(win, ctrX - l/4, ctrY - l/4, l/2, depth - 1)
-            #self.drawSection(win, ctrX - l/4, ctrY, l/4, depth - 1)
-            self.drawSection(win, ctrX - l/4, ctrY + l/4, l/2, depth - 1)
-            #self.drawSection(win, ctrX, ctrY - l/4, l/4, depth - 1)
-            #self.drawSection(win, ctrX, ctrY + l/4, l/4, depth - 1)
-            self.drawSection(win, ctrX + l/4, ctrY - l/4, l/2, depth - 1)
-            #self.drawSection(win, ctrX + l/4, ctrY, l/4, depth - 1)
-            self.drawSection(win, ctrX + l/4, ctrY + l/4, l/2, depth - 1)
+            # Recursive calls: draw the smaller squares
+            self.drawSection(win, ctrX - l/4, ctrY - l/4, l/2, depth - 1) # lower left
+            self.drawSection(win, ctrX - l/4, ctrY + l/4, l/2, depth - 1) # upper left
+            self.drawSection(win, ctrX + l/4, ctrY - l/4, l/2, depth - 1) # lower right
+            self.drawSection(win, ctrX + l/4, ctrY + l/4, l/2, depth - 1) # upper right
             
     def draw(self, window):
-        self.drawSection(window, self.centerX, self.centerY, self.totalLength, self.depth)
+        self.drawSection(window, self.centerX, self.centerY, self.totalLength, self.depth) # LET THE FUN BEGIN
 
 if __name__ == '__main__':
+    # This just makes sure the arguments are valid
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
         print('Usage: %s numberOfLevels' % sys.argv[0])
         exit(1)
-    win = GraphWin("My Swuare Fractal", 800, 800)
-    win.setBackground(color_rgb(255, 255, 255))
+    win = GraphWin("My Swuare Fractal", 800, 800) # window init and size
+    win.setBackground(color_rgb(255, 255, 255)) # sets white background
 
-    numberOfLevels = int(sys.argv[1])
-    squareFractal = SquareFractal(400, 400, 800, numberOfLevels)
-    squareFractal.draw(win)
-    win.getMouse()
+    numberOfLevels = int(sys.argv[1]) # max recursion depth
+    squareFractal = SquareFractal(400, 400, 800, numberOfLevels) # init fractal object
+    squareFractal.draw(win) # LET THE FUN BEGIN
+    win.getMouse() # pause until click
     win.close()
-    quit(0)
-    def squares(ctrPoint, l):
-        squares(Point(ctrPoint.x - 1/3, ctrPoint.y - 1/3))
-        squares(Point(ctrPoint.x - 1/3, ctrPoint.y))
-        squares(Point(ctrPoint.x - 1/3, ctrPoint.y + 1/3))
-        squares(Point(ctrPoint.x, ctrPoint.y - 1/3))
-        squares(Point(ctrPoint.x, ctrPoint.y + 1/3))
-        squares(Point(ctrPoint.x + 1/3, ctrPoint.y - 1/3))
-        squares(Point(ctrPoint.x + 1/3, ctrPoint.y))
-        squares(Point(ctrPoint.x + 1/3, ctrPoint.y + 1/3))
-        
-        p1 = Point(ctrPoint.x - l/2, ctrPoint.y - l/2)
-        p2 = Point(ctrPoint.x + l/2, ctrPoint.y + l/2)
-
-        rect = Rectangle(p1,p2)
-        rect.draw(win)
-            
